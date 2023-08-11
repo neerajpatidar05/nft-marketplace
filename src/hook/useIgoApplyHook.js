@@ -13,7 +13,6 @@ import { createNftAction } from 'redux/action/nftAction';
 import { nftcontract } from 'web3config/web3config';
 
 export const useIgoApply =()=>{
-	
 
     const navigate = useNavigate();
 	const { active } = useWeb3React();
@@ -110,14 +109,12 @@ export const useIgoApply =()=>{
 							"artistname":values.artistname,
 							"image": ImgHash,
 							"description":values.description
-
 						},
 						headers: {
 							'pinata_api_key': `${process.env.REACT_APP_PINATA_API_KEY}`,
 							'pinata_secret_api_key': `${process.env.REACT_APP_PINATA_API_SECRET}`,
 						},
 					});
-
 					console.log('resJSON', resJSON)
 					console.log("final ", `ipfs://${resJSON.data.IpfsHash}`)
 					const tokenURI = `ipfs://${resJSON.data.IpfsHash}`;
@@ -154,7 +151,6 @@ export const useIgoApply =()=>{
 					const ImgHash = `ipfs://${resFile.data.IpfsHash}`;
 					console.log('ImgHash', ImgHash)
 					sendJSONtoIPFS(ImgHash)
-
 				}
 				catch(e){
 					console.log("e--",e)

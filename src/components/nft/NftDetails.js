@@ -16,6 +16,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import abi from 'abi/marketplace.json'
 import { ethers } from 'ethers';
 import { marketplaceContract} from 'web3config/web3config';
+import { parseEther } from 'ethers/lib/utils';
 const DatailsBody = styled(Box)(
   () => `
   
@@ -43,15 +44,16 @@ const BackBtn = styled(Box)(
   `,
 )
 
-function NftDetails() {
+function NftDetails() { 
   const location = useLocation()
   const data = location.state.d
   const tokenId= parseInt(data.tokenId._hex)
-  
+ const price= parseInt(data.floorPrice._hex)
+ 
 async function handleBuy() {
   try {
     console.log(tokenId,"tokenid");
-    await marketplaceContract.buy(tokenId,{value:1});
+    await marketplaceContract.buy(tokenId,{value:price});
     
   } catch (error) {
     console.error('Error buying NFTs:', error);
@@ -66,7 +68,7 @@ async function handleBuy() {
       <div className="gamfi-breadcrumbs-section">
         <div className="container">
           <div className="apply-heading text-center">
-            <h2 className="mb-0">Owned by : -  {data.name}</h2>
+            <h2 className="mb-0">Owned by : -  {data[1]}</h2>
           </div>
         </div>
       </div>
@@ -98,11 +100,11 @@ async function handleBuy() {
                   component="div"
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                 >
-                  <div>
+                  {/* <div>
                     Owned by <b>{data.name}</b>
-                  </div>
+                  </div> */}
                   <div>
-                    Current Price <b>{data.price} ETH</b>
+                    Current Price <b>{parseInt(data.floorPrice._hex)} Wei</b>
                   </div>
                 </Typography>
                     
@@ -165,7 +167,7 @@ async function handleBuy() {
                         <span>Token ID:</span>
                       </Grid>
                       <Grid item xs={6} md={8}>
-                        <span>198</span>
+                        <span>{tokenId}</span>
                       </Grid>
                     </Grid>
                   </Box>

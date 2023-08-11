@@ -5,21 +5,14 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardMedia,
-  Container,
-  Select,
   styled,
-  TextField,
   Typography,
 } from '@mui/material'
-import { useRadioGroup } from '@mui/material/RadioGroup';
-
 import { ethers } from 'ethers'
 import Grid from '@mui/material/Grid'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { nftcontract,marketplaceContract ,marketplaceaddress,nftcontractaddress} from 'web3config/web3config'
-import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import NativeSelect from '@mui/material/NativeSelect';
 import Radio from '@mui/material/Radio';
@@ -54,11 +47,9 @@ const BackBtn = styled(Box)(
 )
 function ListnftForSale() {
   const location = useLocation();
-  console.log(location,"locatiobnnnn");
   const tokenid = parseInt(location.state.names.id._hex);
-  console.log(tokenid,"iddddddddddd");
   const [amount, setAmount] = useState('');
-  const [selectedTimePeriod, setSelectedTimePeriod] = useState(1); // Default value is 1 Month
+  const [selectedTimePeriod, setSelectedTimePeriod] = useState(43200); 
   const [saleType, setsaleType]=useState(1);
   const handleAmountChange = (event) => {
     setAmount(event.target.value);
@@ -77,8 +68,7 @@ function ListnftForSale() {
  async function handlelistfosale() {
         const weiAmount = etherToWei(amount);
         const param=[tokenid,weiAmount,selectedTimePeriod,saleType];
-        console.log(nftcontract,"nftcontrasssssssssss")
-        const approve=await nftcontract.approve(marketplaceaddress,0);
+        const approve=await nftcontract.approve(marketplaceaddress,tokenid);
         const createSale = await marketplaceContract.createSale(...param);
     }
   return (

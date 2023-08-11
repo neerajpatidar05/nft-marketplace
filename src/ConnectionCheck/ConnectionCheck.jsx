@@ -91,11 +91,11 @@ const ConnectionCheck = ({ children }) => {
 							className="footer-cta-area text-center active-shape hover-shape-inner"
 						>
 							<h2 className="title mb-15">
-								Connect your wallate
+								Connect your wallet
 								<br />
 							</h2>
 							<div className="dsc mb-40 md-mb-30">
-								please connect your web3 wallate
+								please connect your web3 wallet
 							</div>
 							{/* <Link to="/ido-apply"> */}
 							{/* <Link to="/ido-apply">

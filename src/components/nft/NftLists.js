@@ -75,7 +75,7 @@ function NftLists(props) {
              <>
                <Body>
                <Link to="/details" state={{ d: d }}>
-                <NFTCard data={d}/>
+               <NFTCard data={d}/>
                </Link>
                </Body>
              </>

@@ -13,6 +13,7 @@ const CardBody = styled(Box)(
     display: flex;
     flex-wrap: wrap;
     gap:2.5%;
+ 
 
 }
   `,
@@ -21,7 +22,7 @@ const Body = styled(Card)(
   () => `
   width:20%;
   margin-bottom:2%;
- 
+
   box-shadow: 1px 1px #342929;
   border-radius: 0%;
 }
