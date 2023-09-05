@@ -96,6 +96,11 @@ export const useIgoApply =()=>{
 			console.log("values NFT",values)
 			console.log("helpers NFT",helpers)
 			setLoading(true); // Set loading to true when submitting
+			setButtonStatus({disabled:true})
+			setButtonStatus({
+				currentBtnText:"Loding...",
+				disabled: true,
+			  });
 			const sendJSONtoIPFS = async (ImgHash) => {
 
 				try {
@@ -122,9 +127,10 @@ export const useIgoApply =()=>{
 					// console.log(contractss);
 					const trx=await nftcontract.safeMint(tokenURI);
 					await trx.wait();
-					console.log("minted successfully");
+					// console.log("minted successfully");
 					setLoading(false);
-					alert(`NFT Minted successfully ${trx.hash}`);
+					// alert(`NFT Minted successfully ${trx.hash}`);
+					setButtonStatus({disabled:false})
 					createNftAction({tokenURI})
 					
 				} catch (error) {
@@ -171,7 +177,7 @@ export const useIgoApply =()=>{
 		setCoverImage(URL.createObjectURL(e?.target?.files[0]));
 		formik.values.coverImage = e.target.files[0];
 	};
-
+   console.log('setButtonStatus', setButtonStatus.currentBtnText,setButtonStatus.disabled)
     return {
 		formik,
 		coverImage,

@@ -53,7 +53,7 @@ function NftDetails() {
   const data = location.state.d
   const tokenId= parseInt(data.tokenId._hex)
  const price= parseInt(data.floorPrice._hex)
- console.log(data.saleType,"data from detail");
+ console.log(data.saleType,"data from detail",price,"priceeeeeeeee");
 
 
  const tokenID= parseInt(data[0]._hex);

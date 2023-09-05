@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { nftcontract, marketplaceContract } from 'web3config/web3config';
 import { Box, styled } from '@mui/material'
 import NFTDisplay from './NFTDisplay';
+import Loader from 'Loader/Loader';
 
 const CardBody = styled(Box)(
   () => `
@@ -54,11 +55,12 @@ const Profile = () => {
   const [image, setImage]= useState('');
   const [url, setUrl]=useState('');
   const [nftdescription, setDescription]=useState('')
+  const [loding,setLoding]=useState(false)
 
   useEffect(()=>{
    
     const  apiData = async() => {
- 
+      setLoding(true)
       const fetchNFTs = async (Metamaskaddress) => {
         try {
           const tokenURIs = await nftcontract.getOwnedNFTs(Metamaskaddress);
@@ -82,17 +84,16 @@ const Profile = () => {
           const tokenDataArray = await Promise.all(Array.from(combinedTokenURIsSet).map(async (tokenUri) => {
             const tokenId = await nftcontract.getTokenId(tokenUri);
             const isListed = await checkIfNFTIsListed(tokenId); 
-            console.log(tokenUri,"sf");
             const imageurl = tokenUri.replace("ipfs://", "");
             const { imageLink, nftname,nftdescription } = await NFTDisplay(imageurl);
-            console.log(imageLink, "nftimagem");
             setImage(imageLink);
             setUrl(nftname);
             setDescription(nftdescription);
             return { uri: imageLink, id: tokenId, listed: isListed, nftname, nftdescription };
           }));
-          console.log(tokenDataArray,"tokendataarray");
+          // const tokenDataArray =[]
            setNFTs(tokenDataArray);
+           setLoding(false)
         } catch (error) {
           console.error('Error fetching NFTs:', error);
         }
@@ -113,13 +114,14 @@ const Profile = () => {
               console.error('Metamask is not installed');
             }
     };
+
     apiData()
-    
   },[])
-  
    return (
     <div><CardBody>
-        { nfts.length === 0 ? (
+        { 
+        loding ? <Loader/>:
+       nfts.length === 0? (
           <div style={{ textAlign: 'center', marginTop: '100px' }}>
             <Typography variant="h3" style={{ marginBottom: '16px' }}>
               You don't have any NFTs.
@@ -132,10 +134,11 @@ const Profile = () => {
               .
             </Typography>
           </div>
-        ) :(nfts.map((tokenURI, index) => (
+        ):
+        (nfts.map((tokenURI, index) => (
           <Body>
           <Card key={index}>
-            <CardMedia  component="img" src={tokenURI.uri} alt= {`NFT ${tokenURI.id.toString()}`} />
+            <CardMedia  component="img" src={tokenURI.uri} alt= {`NFT ${tokenURI.id.toString()}`}  style={{height:'179px',objectFit:"fill"}}/>
             <CardContent>
               <Typography variant="h5" component="div">
                 Token Id - {tokenURI.id.toString()}
@@ -151,7 +154,9 @@ const Profile = () => {
       <Button>View Details</Button>
     </Link>
           </Card></Body>
-        )))}</CardBody>
+        )))
+        }
+        </CardBody>
       </div> 
   );
 };

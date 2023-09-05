@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import NFTCard from './NftCard'
 import Web3 from 'web3';
 import { marketplaceContract} from 'web3config/web3config'
+import Loader from 'Loader/Loader';
 
 const CardBody = styled(Box)(
   () => `
@@ -36,8 +37,11 @@ const Body = styled(Card)(
 
 function NftLists(props) {
   const [nfts, setNFTs] = useState([]);
+  const [loding,setLoding]=useState(false)
+
   useEffect(()=>{
     const  apiData = async() => {
+      setLoding(true)
       const fetchNFTs = async () => {
         try {
           const tokenURIs = await marketplaceContract.getListedTokens();
@@ -46,6 +50,7 @@ function NftLists(props) {
           const filteredTokenURIs = tokenURIs.filter(tokenURI => tokenURI.seller !== '0x0000000000000000000000000000000000000000');
           console.log(filteredTokenURIs,"filtertokenuris");
           setNFTs(filteredTokenURIs);
+          setLoding(false)
           } catch (error) {
           console.error('Error fetching NFTs:', error);
         }
@@ -70,7 +75,9 @@ function NftLists(props) {
   return (
     <div>
       <CardBody> 
-       { nfts.length === 0 ? (
+       {
+       loding? <Loader/>:
+       nfts.length === 0 ? (
           <div style={{ textAlign: 'center', marginTop: '100px' }}>
             <Typography variant="h3" style={{ marginBottom: '16px' }}>
              No NFTs are Listed.

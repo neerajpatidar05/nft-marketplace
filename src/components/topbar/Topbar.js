@@ -115,7 +115,7 @@ export default function Topbar() {
 																		  <a>Profile</a>
 																	  </Link>
                                   </li>
-                                  <li>
+                                  {/* <li>
                                   <Link
 																		  style={{
 																			  padding: "0px"
@@ -124,7 +124,7 @@ export default function Topbar() {
 																	  >
 																		  <a>ListedNFT</a>
 																	  </Link>
-                                  </li>
+                                  </li> */}
 															  </ul>
 														  </li>
 

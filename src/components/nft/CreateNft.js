@@ -174,10 +174,11 @@ function CreateNft() {
 											)}
 										</div>
                 </div>
+                {console.log('buttonStatus', buttonStatus.currentBtnText,buttonStatus.disabled)}
                 <div className="project-btn-area text-center black-shape-big mt-40">
                   <input
                     type="submit"
-                    name="Mint"
+                    // name='Mint'
                     value={buttonStatus.currentBtnText}
                     disabled={buttonStatus.disabled}
                   />
