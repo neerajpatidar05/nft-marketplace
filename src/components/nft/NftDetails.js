@@ -9,14 +9,17 @@ import {
   styled,
   Typography,
 } from '@mui/material'
+import { useState , useEffect} from 'react'
+
 import Grid from '@mui/material/Grid'
 import React from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import abi from 'abi/marketplace.json'
 import { ethers } from 'ethers';
-import { marketplaceContract} from 'web3config/web3config';
+import { marketplaceContract,nftcontract} from 'web3config/web3config';
 import { parseEther } from 'ethers/lib/utils';
+import NFTDisplay from './NFTDisplay'
 const DatailsBody = styled(Box)(
   () => `
   
@@ -45,22 +48,62 @@ const BackBtn = styled(Box)(
 )
 
 function NftDetails() { 
+  const [amount, setAmount] = useState('');
   const location = useLocation()
   const data = location.state.d
   const tokenId= parseInt(data.tokenId._hex)
  const price= parseInt(data.floorPrice._hex)
+ console.log(data.saleType,"data from detail");
+
+
+ const tokenID= parseInt(data[0]._hex);
+ const [image, setImage]= useState('');
+ const [url, setUrl]=useState('');
+ const [nftdescription, setDescription]=useState('')
+ useEffect(() => {
+   const fetchTokenURI = async () => {
+     try {
+       const tokenURI = await nftcontract.tokenURI(tokenID);
+       const imageurl = tokenURI.replace("ipfs://", "");
+       const { imageLink, nftname,nftdescription } = await NFTDisplay(imageurl);
+       console.log(imageLink, "nftimagem");
+       setImage(imageLink);
+       setUrl(nftname);
+       setDescription(nftdescription);
+     } catch (error) {
+       console.error('Error fetching NFT metadata:', error);
+     }
+   };
  
+   fetchTokenURI();
+ }, [tokenID]);
+ 
+
+ const handleAmountChange = (event) => {
+  setAmount(event.target.value);
+};
+function etherToWei(etherAmount) {
+  const weiAmount = ethers.utils.parseEther(etherAmount.toString());
+  return weiAmount;
+}
 async function handleBuy() {
   try {
-    console.log(tokenId,"tokenid");
+    console.log(tokenId,"tokenid",price);
     await marketplaceContract.buy(tokenId,{value:price});
     
   } catch (error) {
     console.error('Error buying NFTs:', error);
   }
-   return (
-     <div>{console.log("buy button call")}</div>
-   )
+  
+ }
+ async function handleMakeOffer(){
+  try {
+    console.log("handlemakeoffer",amount,tokenId);
+    const weiAmount = etherToWei(amount);
+    await marketplaceContract.placeOffer(tokenId,{value:weiAmount});
+  } catch (error) {
+    console.log(error);
+  }
  }
  
  return (
@@ -84,7 +127,7 @@ async function handleBuy() {
               
               <ImagBody>
                 <img
-                  src={`https://ipfs.io/ipfs/Qmb4aNkjZ9XAkWwFndpBYWfdmHr5vRHYkNahH5R3fdQR2a`}
+                  src={image}
                   width="70%"
                 />
               </ImagBody>
@@ -108,22 +151,16 @@ async function handleBuy() {
                   </div>
                 </Typography>
                     
-              <Typography  style={{color:"black"}}>NFT Name : - <b>{data.itemname}</b></Typography>
+              <Typography  style={{color:"black"}}>NFT Name : - <b>{url}</b></Typography>
                    
                 <Typography>
                   <div>
                     <Grid item xs={4} sx={{ mt: 5 }}>
-                    <Typography variant="h5" component="h5" style={{color:"black"}}>Description : -</Typography>
+                    <Typography variant="h5" component="h5" style={{color:"black"}}>Description :-</Typography>
                     </Grid>
                     <Grid item xs={11}>
                       <p>
-                        Column widths are integer values between 1 and 12; they
-                        apply at any breakpoint and indicate how many columns
-                        are occupied by the component. A value given to a
-                        breakpoint applies to all the other breakpoints wider
-                        than it (unless overridden, as you can read later in
-                        this page). For example, xs={12} sizes a component to
-                        occupy the whole viewport width regardless of its size.
+                       {nftdescription}
                       </p>
                     </Grid>
                   </div>
@@ -174,12 +211,20 @@ async function handleBuy() {
                 </Box>
               </CardContent>
               <CardActions>
-                <Button sx={{ background: '#121212' }} variant="contained" onClick={handleBuy}>
-                  Buy
-                </Button>
-                <Button sx={{ background: '#121212' }} variant="contained">
-                  Place Bid 
-                </Button>
+              {data.saleType === 1 && (
+          <Button sx={{ background: '#121212' }} variant="contained" onClick={handleBuy}>
+            Buy
+          </Button>
+        )}
+        {data.saleType === 0 && (
+          <div>
+          <Button sx={{ background: '#121212' }} variant="contained" onClick={handleMakeOffer}>
+            Make Offer
+          </Button>
+          amount <input type="number" value={amount} onChange={handleAmountChange} />
+          
+          </div>
+        )}
               </CardActions>
             </Card>
           </Grid>

@@ -16,7 +16,7 @@ export const useIgoApply =()=>{
 
     const navigate = useNavigate();
 	const { active } = useWeb3React();
-
+	const [loading, setLoading] = useState(false);
 	const [coverImage, setCoverImage] = useState();
 
 	const [buttonStatus, setButtonStatus] = useState({
@@ -95,7 +95,7 @@ export const useIgoApply =()=>{
 		onSubmit: async (values, helpers) => {
 			console.log("values NFT",values)
 			console.log("helpers NFT",helpers)
-
+			setLoading(true); // Set loading to true when submitting
 			const sendJSONtoIPFS = async (ImgHash) => {
 
 				try {
@@ -123,12 +123,14 @@ export const useIgoApply =()=>{
 					const trx=await nftcontract.safeMint(tokenURI);
 					await trx.wait();
 					console.log("minted successfully");
+					setLoading(false);
 					alert(`NFT Minted successfully ${trx.hash}`);
 					createNftAction({tokenURI})
 					
 				} catch (error) {
 					console.log("JSON to IPFS: errrrrrrrrrrrrrrrr")
 					console.log(error);
+					setLoading(false);
 				}	
 			}
 
@@ -176,6 +178,7 @@ export const useIgoApply =()=>{
         onCoverImageChange,
 		setButtonStatus,
 		buttonStatus,
-        resetState
+        resetState,
+		loading
 	};
 }

@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import Card from '@mui/material/Card'
-import { Box, styled } from '@mui/material'
+import { Box, styled ,Typography} from '@mui/material'
 import { Link } from "react-router-dom";
 import NFTCard from './NftCard'
 import Web3 from 'web3';
 import { marketplaceContract} from 'web3config/web3config'
+
 const CardBody = styled(Box)(
   () => `
   
@@ -68,9 +69,21 @@ function NftLists(props) {
   },[])
   return (
     <div>
-      <div>
-       <CardBody> 
-       {nfts?.map((d) => {
+      <CardBody> 
+       { nfts.length === 0 ? (
+          <div style={{ textAlign: 'center', marginTop: '100px' }}>
+            <Typography variant="h3" style={{ marginBottom: '16px' }}>
+             No NFTs are Listed.
+            </Typography>
+            <Typography variant="h4">
+              Please{' '}
+              <Link to="/createnft" style={{ color: '#1976d2', textDecoration: 'none' }}>
+                mint NFTs
+              </Link>
+              .
+            </Typography>
+          </div>
+        ) :( nfts?.map((d) => {
            return (
              <>
                <Body>
@@ -78,11 +91,12 @@ function NftLists(props) {
                <NFTCard data={d}/>
                </Link>
                </Body>
+                
              </>
            )
-         })}
+         }))}
        </CardBody>
-      </div> 
+    
     </div>
   );
 };

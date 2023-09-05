@@ -22,6 +22,7 @@ contract NFTMarketplace {
         address bidder;
         uint256 amount;
         uint256 createdAt;
+        bool withdrawn; 
     }
 
     mapping(uint256 => Offer[]) public tokenOffers;
@@ -78,8 +79,8 @@ contract NFTMarketplace {
         require(nftContract.ownerOf(_tokenId) == msg.sender, "Only the token owner can cancel a sale");
         delete tokenIdToSale[_tokenId];
         sale.active=false;
-           removeTokenFromListed(_tokenId); 
-  
+        removeTokenFromListed(_tokenId); 
+        delete tokenOffers[_tokenId];
         emit SaleCancelled(_tokenId, msg.sender);
     }
 
@@ -149,11 +150,13 @@ contract NFTMarketplace {
         tokenOffers[_tokenId].push(Offer({
             bidder: msg.sender,
             amount: msg.value,
-            createdAt: block.timestamp
+            createdAt: block.timestamp,
+               withdrawn: false
         }));
 
         emit OfferPlaced(_tokenId, msg.sender, msg.value);
     }
+
 function selectBestOffer(uint256 _tokenId, uint256 _offerIndex) external {
     require(nftContract.ownerOf(_tokenId) == msg.sender, "Only the token owner can select an offer");
     require(tokenOffers[_tokenId].length > 0, "No offers available");
@@ -201,11 +204,22 @@ function selectBestOffer(uint256 _tokenId, uint256 _offerIndex) external {
     }
 
     tokenBestOfferIndex[_tokenId] = _offerIndex;
-
+    delete tokenOffers[_tokenId];
+    removeTokenFromListed(_tokenId);
+     delete tokenIdToSale[_tokenId];
     emit OfferAccepted(_tokenId, msg.sender, offer.bidder, offer.amount);
 }
+    function withdrawOffer(uint256 _tokenId) external {
+        require(tokenIdToSale[_tokenId].active, "Sale is not active");
+        Offer[] storage offers = tokenOffers[_tokenId];
 
-
+        for (uint256 i = 0; i < offers.length; i++) {
+            if (offers[i].bidder == msg.sender && !offers[i].withdrawn) {
+                offers[i].withdrawn = true;
+                payable(msg.sender).transfer(offers[i].amount);
+            }
+        }
+    }
 
     function withdrawFunds() external onlyOwner {
         uint256 balance = address(this).balance;
@@ -227,5 +241,9 @@ function selectBestOffer(uint256 _tokenId, uint256 _offerIndex) external {
     function getSuccessfullyBoughtTokens(address _address) public view returns (uint256[] memory) {
        return successfullyBuy[_address];
 }
-  
+
+    function getOffersForToken(uint256 _tokenId) external view returns (Offer[] memory) {
+        return tokenOffers[_tokenId];
+    }
+
 }

@@ -18,10 +18,10 @@ import NativeSelect from '@mui/material/NativeSelect';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { BorderAll, CenterFocusStrong, FormatUnderlined } from '@mui/icons-material'
 
 const DatailsBody = styled(Box)(
   () => `
-  
     margin: 3% 10%;
 }
   `,
@@ -47,6 +47,8 @@ const BackBtn = styled(Box)(
 )
 function ListnftForSale() {
   const location = useLocation();
+ const state=location.state;
+ console.log(state,"stateeeeeeeeeeee");
   const tokenid = parseInt(location.state.names.id._hex);
   const [amount, setAmount] = useState('');
   const [selectedTimePeriod, setSelectedTimePeriod] = useState(43200); 
@@ -59,6 +61,7 @@ function ListnftForSale() {
   };
   const handleSaleTypeChange=(event)=>{
     setsaleType(event.target.value);
+    console.log(saleType,"saletyperrrrrrrrrrrr");
   }
   function etherToWei(etherAmount) {
     const weiAmount = ethers.utils.parseEther(etherAmount.toString());
@@ -77,6 +80,7 @@ function ListnftForSale() {
       <div className="container">
         <div className="apply-heading text-center">
           <h2 className="mb-0">Owned by : - </h2>
+          <h3><a href='/profile' color='black' >You</a></h3>
         </div>
       </div>
     </div>
@@ -84,7 +88,7 @@ function ListnftForSale() {
     <Link to="/">
     <BackBtn><ArrowBackIcon/>  Back</BackBtn>
     </Link>
-
+    
     <DatailsBody>
       <Grid container spacing={2}>
         <Grid item xs={2} md={6}>
@@ -92,14 +96,14 @@ function ListnftForSale() {
             
             <ImagBody>
               <img
-                src={`https://ipfs.io/ipfs/Qmb4aNkjZ9XAkWwFndpBYWfdmHr5vRHYkNahH5R3fdQR2a`}
+                src={state.names.uri}
                 width="70%"
               />
             </ImagBody>
           </div>
         </Grid>
         <Grid item xs={10} md={6}>
-          <Card sx={{ width: '100%' }}>
+          <Card sx={{ width: '100%',   }}>
             <CardContent>
 
               <Typography
@@ -116,22 +120,16 @@ function ListnftForSale() {
                 </div>
               </Typography>
                   
-            <Typography  style={{color:"black"}}>NFT Name : - <b></b></Typography>
+            <Typography  style={{color:"black"}}>NFT Name :-{state.names.nftname} <b></b></Typography>
                  
               <Typography>
                 <div>
                   <Grid item xs={4} sx={{ mt: 5 }}>
-                  <Typography variant="h5" component="h5" style={{color:"black"}}>Description : -</Typography>
+                  <Typography variant="h5" component="h5" style={{color:"black"}}>Description :-</Typography>
                   </Grid>
                   <Grid item xs={11}>
                     <p>
-                      Column widths are integer values between 1 and 12; they
-                      apply at any breakpoint and indicate how many columns
-                      are occupied by the component. A value given to a
-                      breakpoint applies to all the other breakpoints wider
-                      than it (unless overridden, as you can read later in
-                      this page). For example, xs={12} sizes a component to
-                      occupy the whole viewport width regardless of its size.
+                      {state.names.nftdescription}
                     </p>
                   </Grid>
                 </div>
@@ -179,15 +177,67 @@ function ListnftForSale() {
                     </Grid>
                   </Grid>
                 </Box>
+
+                <Box sx={{ flexGrow: 1,border:'2px' }}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6} md={4}>
+                      <span>Sale Type:</span>
+                    </Grid>
+                    <Grid item xs={6} md={8}>
+                    <RadioGroup
+    aria-labelledby="demo-radio-buttons-group-label"
+    defaultValue="female"
+    name="radio-buttons-group"
+    onChange={handleSaleTypeChange}
+  >
+    <FormControlLabel value={1} control={<Radio />} label="DirectSale" />
+    <FormControlLabel value={0} control={<Radio />} label="Auction" />
+  </RadioGroup>
+                    </Grid>
+                  </Grid>
+                </Box>
+                <Box sx={{ flexGrow: 1,border:'2px' }}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6} md={4}>
+                      <span>Validity:</span>
+                    </Grid>
+                    <Grid item xs={6} md={8}>
+                <FormControl >
+          <NativeSelect
+            value={selectedTimePeriod}
+            onChange={handleTimePeriodChange}
+            inputProps={{
+            name: 'sale-type',
+            id: 'sale-type-select',
+            
+          }}
+        >
+          <option value={43200}>12 Hours</option>
+          <option value={86400}>1 Day</option>
+          <option value={604800}>1 week</option>
+          <option value={2592000}>30 Days</option>
+
+        </NativeSelect>  
+        </FormControl>
+        </Grid>
+                  </Grid>
+                </Box>
               </Box>
+              <Box sx={{ flexGrow: 1,border:'2px' , marginTop:'2px'}}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6} md={4}>
+                      <span>Amount:</span>
+                    </Grid>
+                    <Grid item xs={6} md={8}>
+                    <input type="number" value={amount} onChange={handleAmountChange} />
+                    </Grid>
+                  </Grid>
+                </Box>
+
             </CardContent>
             <CardActions>
-              <Button sx={{ background: '#121212' }} variant="contained" onClick={handlelistfosale}>
-              List for sale
-              </Button>            
-             amount <input type="number" value={amount} onChange={handleAmountChange} />
-        <Box sx={{ minWidth: 120 }}>
-      <FormControl fullWidth>
+            <Box sx={{ minWidth: 120 }}>
+      {/* <FormControl fullWidth>
           <NativeSelect
             value={selectedTimePeriod}
             onChange={handleTimePeriodChange}
@@ -201,18 +251,23 @@ function ListnftForSale() {
           <option value={604800}>1 week</option>
           <option value={2592000}>30 Days</option>
 
-        </NativeSelect> 
-        <RadioGroup
+        </NativeSelect>  */}
+        {/* <RadioGroup
     aria-labelledby="demo-radio-buttons-group-label"
     defaultValue="female"
     name="radio-buttons-group"
     onChange={handleSaleTypeChange}
   >
     <FormControlLabel value={1} control={<Radio />} label="DirectSale" />
-    <FormControlLabel value={2} control={<Radio />} label="Auction" />
-  </RadioGroup>
-      </FormControl>
-      </Box>
+    <FormControlLabel value={0} control={<Radio />} label="Auction" />
+  </RadioGroup> */}
+      {/* </FormControl> */}
+      </Box><Box alignItems={'center'}>
+              <Button sx={{ background: '#0000FF' }} variant="contained" onClick={handlelistfosale}>
+              List for sale
+              </Button>            
+             {/* amount <input type="number" value={amount} onChange={handleAmountChange} /> */}
+             </Box>
       </CardActions>
           </Card>
         </Grid>

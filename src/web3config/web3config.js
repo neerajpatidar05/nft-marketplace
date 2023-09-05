@@ -4,8 +4,8 @@ import { ethers } from 'ethers';
 import React, { useState ,useEffect} from 'react';
 import marketplaceabi from 'abi/marketplace.json'
 // Initialize your web3 connection
-const marketplaceaddress='0xBA01432F68fcA69a27159178760A96b447F8Ec1F';
-const nftcontractaddress = '0x58D1013a33e27D71B9Edb6C832eC839A0d44d395';
+const marketplaceaddress='0xa771d1b94257F8937A4f4fB13072d0EDF0E9c4e3';
+const nftcontractaddress = '0x2F30102080EeD63933269c5FA149fd2f021b9296';
 const contractabi = abi.abi;
 const { ethereum } = window;
 const provider = new ethers.providers.Web3Provider(ethereum);

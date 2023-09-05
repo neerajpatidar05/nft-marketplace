@@ -23,7 +23,9 @@ const ListonUI = lazy(()=>
 const ListnftForSale = lazy(() =>
 	import("components/nft/ListnftForSale")
 );
-
+const Listednftdetails=lazy(()=>
+	import("components/nft/Listednftdetails")
+);
 function App() {
 	return (
 		<Suspense fallback={<Loader />}>
@@ -35,6 +37,7 @@ function App() {
 					<Route path="/profile" element={<Profile/>}></Route>
 					<Route path="/listednft" element={<ListonUI/>}></Route>
 					<Route exact path="/listnftforsale" element={<ListnftForSale></ListnftForSale>} />
+					<Route exact path="/listednftdetails" element={<Listednftdetails></Listednftdetails>}/>
 
 				</Routes>
 			</ConnectionCheck>
