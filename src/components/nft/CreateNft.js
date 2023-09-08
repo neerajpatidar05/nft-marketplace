@@ -30,9 +30,9 @@ function CreateNft() {
                 // autocomplete="off"
               >
                 <div>
-                  <h4 className="mb-0">1. Project Details</h4>
+                  <h4 className="mb-0">1. NFT Details</h4>
                   <p className="text-white">
-                    Please complete the required project details
+                    Please complete the required NFT details
                   </p>
                 </div>
                 <div className="input-button">
@@ -53,7 +53,7 @@ function CreateNft() {
                         {coverImage ? (
                           <img
                             src={coverImage}
-                            alt="project image"
+                            alt="Nft image"
                           />
                         ) : (
                           <>
@@ -80,7 +80,7 @@ function CreateNft() {
                     </div>
                   </div>
                   <label htmlFor="project-cover" className="text-white">
-                    Project Background *
+                    NFT Image *
                   </label>
                   <div className="form-text text-white">
 											{Boolean(

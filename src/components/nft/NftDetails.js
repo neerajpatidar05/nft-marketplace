@@ -4,8 +4,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardMedia,
-  Container,
   styled,
   Typography,
 } from '@mui/material'
@@ -20,6 +18,7 @@ import { ethers } from 'ethers';
 import { marketplaceContract,nftcontract} from 'web3config/web3config';
 import { parseEther } from 'ethers/lib/utils';
 import NFTDisplay from './NFTDisplay'
+import Web3 from 'web3'
 const DatailsBody = styled(Box)(
   () => `
   
@@ -53,7 +52,7 @@ function NftDetails() {
   const data = location.state.d
   const tokenId= parseInt(data.tokenId._hex)
  const price= parseInt(data.floorPrice._hex)
- console.log(data.saleType,"data from detail",price,"priceeeeeeeee");
+ console.log(data.saleType,"data from detail");
 
 
  const tokenID= parseInt(data[0]._hex);
@@ -83,23 +82,28 @@ function NftDetails() {
   setAmount(event.target.value);
 };
 function etherToWei(etherAmount) {
-  const weiAmount = ethers.utils.parseEther(etherAmount.toString());
+ // const weiAmount = parseEther(etherAmount.toString());
+ const weiAmount= Web3.toWei(etherAmount,"ether")
+ 
   return weiAmount;
 }
 async function handleBuy() {
   try {
-    console.log(tokenId,"tokenid",price);
-    await marketplaceContract.buy(tokenId,{value:price});
+    const etherValue = Web3.utils.fromWei(String(price, 'ether'));
+    console.log(etherValue,"ethervalueeeeeeeeeeeeeeee");
+    const weiAmount= Web3.utils.toWei(String(etherValue,"ether"))
+    // web3.utils.toWei('1', 'ether');
+   await marketplaceContract.buy(tokenId,{value:weiAmount});
     
   } catch (error) {
     console.error('Error buying NFTs:', error);
   }
-  
  }
  async function handleMakeOffer(){
   try {
     console.log("handlemakeoffer",amount,tokenId);
-    const weiAmount = etherToWei(amount);
+    // const weiAmount = etherToWei(amount);
+    const weiAmount= Web3.utils.toWei(String(amount,"ether"))
     await marketplaceContract.placeOffer(tokenId,{value:weiAmount});
   } catch (error) {
     console.log(error);
@@ -147,7 +151,7 @@ async function handleBuy() {
                     Owned by <b>{data.name}</b>
                   </div> */}
                   <div>
-                    Current Price <b>{parseInt(data.floorPrice._hex)} Wei</b>
+                    Current Price <b>{Web3.utils.fromWei(String(price, 'ether'))} Ether</b>
                   </div>
                 </Typography>
                     

@@ -1,12 +1,14 @@
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { nftcontract } from 'web3config/web3config';
 import NFTDisplay from './NFTDisplay';
+import Web3 from 'web3';
 import { useState , useEffect} from 'react';
 const NFTCard = (props) => {
   const [image, setImage]= useState('');
   const [url, setUrl]=useState('');
 
   const { data } = props
+  const price=data.floorPrice._hex;
   const tokenID= parseInt(data[0]._hex);
   useEffect(() => {
     const fetchTokenURI = async () => {
@@ -46,7 +48,7 @@ const NFTCard = (props) => {
         </p>
         <div className="flexBetween mt-1 minlg:mt-3 flex-row xs:flex-col xs:items-start xs:mt-3">
           <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-xs minlg:text-lg">
-            Price: {parseInt(data.floorPrice._hex) || 500}
+            Price: {Web3.utils.fromWei(String(price, 'ether')) || 500}
             <span className="normal">Wei</span>
           </p>
           <p className="font-poppins dark:text-white text-nft-black-1 text-xs minlg:text-lg">

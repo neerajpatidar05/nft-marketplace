@@ -91,11 +91,13 @@ function Listednftdetails() {
                 Token Id - {parseInt(state.names.id._hex)}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {state.names.nftdescription}
+                Description: {state.names.nftdescription}
               </Typography>
-              {state.names.listed ? (
+              {state.names.listed ? (<>
+                <p style={{ color: 'gray' }}>Nft is alredy Listed. You can cancel sale by clicking below button.</p>
                 <button onClick={() => handleCancelSale(state.names.id)}>Cancel sale </button>
-              ) : (
+                </>
+) : (
                 <Link to={"/listnftforsale"} state={{ names: state.names }}>
                   <button>List NFT</button>
                 </Link>
